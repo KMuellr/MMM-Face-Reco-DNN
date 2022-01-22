@@ -4,6 +4,8 @@
 # import the necessary packages
 from imutils.video import FPS, VideoStream
 from datetime import datetime
+import subprocess
+import us_distance
 import face_recognition
 import argparse
 import imutils
@@ -103,8 +105,31 @@ tolerance = float(args["tolerance"])
 # start the FPS counter
 fps = FPS().start()
 
+# monitor state of the display
+display_on = True
+# when was the last time the distance sensor detected someone
+last_dist_detect = time.time()
+
 # loop over frames from the video file stream
 while True:
+	# check if someone stands infront of the monitor
+	if time.time() - last_dist_detect > 10:
+		if us_distance.get_distance() > 150:
+			# no one infront for 60s? --> turn off screen
+			if display_on and time.time() - last_dist_detect > 60:
+				process = subprocess.Popen("xset dpms force off".split(), 
+											stdout=subprocess.PIPE)
+				display_on = False
+			time.sleep(2)
+			continue
+		else:
+			# someone in front of mirror? --> save time and turn on screen if necessary
+			last_dist_detect = time.time()
+			if not display_on:
+				process = subprocess.Popen("xset dpms force on".split(), 
+												stdout=subprocess.PIPE)
+				display_on = True
+
 	# grab the frame from the threaded video stream and resize it
 	# to 500px (to speedup processing)
 	originalFrame = vs.read()
@@ -158,19 +183,18 @@ while True:
 		# update the list of names
 		names.append(name)
 
-	# loop over the recognized faces
-	for ((top, right, bottom, left), name) in zip(boxes, names):
-		# draw the predicted face name on the image
-		cv2.rectangle(frame, (left, top), (right, bottom),
-			(0, 255, 0), 2)
-		y = top - 15 if top - 15 > 15 else top + 15
-		txt = name + " (" + "{:.2f}".format(minDistance) + ")"
-		cv2.putText(frame, txt, (left, y), cv2.FONT_HERSHEY_SIMPLEX,
-			0.75, (0, 255, 0), 2)
-
 	# display the image to our screen
 	if (args["output"] == 1):
-		cv2.imshow("Frame", frame)
+		# loop over the recognized faces
+		for ((top, right, bottom, left), name) in zip(boxes, names):
+			# draw the predicted face name on the image
+			cv2.rectangle(frame, (left, top), (right, bottom),
+				(0, 255, 0), 2)
+			y = top - 15 if top - 15 > 15 else top + 15
+			txt = name + " (" + "{:.2f}".format(minDistance) + ")"
+			cv2.putText(frame, txt, (left, y), cv2.FONT_HERSHEY_SIMPLEX,
+				0.75, (0, 255, 0), 2)
+			cv2.imshow("Frame", frame)
 
 	# update the FPS counter
 	fps.update()
@@ -210,6 +234,7 @@ while True:
 	key = cv2.waitKey(1) & 0xFF
 	# if the `q` key was pressed, break from the loop
 	if key == ord("q") or closeSafe == True:
+		us_distance.cleanup()
 		break
 
 	time.sleep(args["interval"] / 1000)

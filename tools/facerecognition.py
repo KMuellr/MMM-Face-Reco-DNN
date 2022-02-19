@@ -105,7 +105,7 @@ tolerance = float(args["tolerance"])
 # start the FPS counter
 fps = FPS().start()
 
-# monitor state of the display
+# state of the display
 display_on = True
 # when was the last time the distance sensor detected someone
 last_dist_detect = time.time()
@@ -114,8 +114,8 @@ last_dist_detect = time.time()
 while True:
 	# check if someone stands infront of the monitor
 	if time.time() - last_dist_detect > 10:
-		if us_distance.get_distance() > 150:
-			# no one infront for 60s? --> turn off screen
+		if us_distance.get_distance() > 100:
+			# no one infront for 60s? --> turn off screen, no facedetection
 			if display_on and time.time() - last_dist_detect > 60:
 				process = subprocess.Popen("xset dpms force off".split(), 
 											stdout=subprocess.PIPE)
@@ -123,7 +123,7 @@ while True:
 			time.sleep(2)
 			continue
 		else:
-			# someone in front of mirror? --> save time and turn on screen if necessary
+			# someone in front of mirror? --> store time and turn on screen if necessary
 			last_dist_detect = time.time()
 			if not display_on:
 				process = subprocess.Popen("xset dpms force on".split(), 
@@ -194,7 +194,7 @@ while True:
 			txt = name + " (" + "{:.2f}".format(minDistance) + ")"
 			cv2.putText(frame, txt, (left, y), cv2.FONT_HERSHEY_SIMPLEX,
 				0.75, (0, 255, 0), 2)
-			cv2.imshow("Frame", frame)
+		cv2.imshow("Frame", frame)
 
 	# update the FPS counter
 	fps.update()

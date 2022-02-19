@@ -116,6 +116,15 @@ module.exports = NodeHelper.create({
         this.python_start();
       }
     }
+    if (notification === 'RESTART'){
+      // Set static output to 0, because we do not need any output for MMM
+      this.stop()
+      // restart after 20s
+      setTimeout(() => {
+        pythonStarted = true;
+        this.python_start();
+      }, 20*1000);
+    }
   },
 
   stop: function() {

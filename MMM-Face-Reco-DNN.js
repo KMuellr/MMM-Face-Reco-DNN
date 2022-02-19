@@ -83,6 +83,11 @@ Module.register('MMM-Face-Reco-DNN', {
     this.config.classes_unknown=[this.config.unknownClass,this.config.defaultClass, this.config.everyoneClass,this.config.alwaysClass];
     this.config.classes_known  =[this.config.knownClass,                            this.config.everyoneClass,this.config.alwaysClass];
 
+
+    // we want to frequently restart the facerecognition.py
+    setInterval(() => {
+			this.sendSocketNotification('RESTART', null);
+		}, 24*60*60*1000);
   },
 
   // ----------------------------------------------------------------------------------------------------

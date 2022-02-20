@@ -117,7 +117,7 @@ module.exports = NodeHelper.create({
       }
     }
     if (notification === 'RESTART'){
-      // Set static output to 0, because we do not need any output for MMM
+      // stop python shell
       this.stop()
       // restart after 20s
       setTimeout(() => {

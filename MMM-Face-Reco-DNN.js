@@ -63,7 +63,12 @@ Module.register('MMM-Face-Reco-DNN', {
     multiUser: 0,
     // turn on extra debugging 0=no, 1=yes
     debug: 0,
-    
+    // Facerecognition starts as soon as something as closer to the mirror than
+    // maxDetectDistance (in cm). Range ~[10, 400]
+    maxDetectDistance: 150,
+    // If no one stands in front of the mirror for screenOffTime seconds the screen 
+    // is turned off
+    screenOffTime: 60,
   },
 
   timouts: {},

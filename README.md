@@ -1,3 +1,31 @@
+# This Fork
+
+Fork of [MMM-Face-Reco-DNN](https://github.com/nischi/MMM-Face-Reco-DNN). We use a ultrasonic sensor to detect if someone 
+stands in front of the mirror. 
+If there is a person in front of the mirror the face recognition runs.
+If there is no one standing in front of the mirror we automatically turn off the 
+screen & face recognition to save energy.
+
+Additional config.js options:
+```js
+{
+    module: 'MMM-Face-Reco-DNN',
+    config: {
+      logoutDelay: 15000,
+      
+      ...,
+
+    // Facerecognition starts as soon as something as closer to the mirror than
+    // maxDetectDistance (in cm). Range ~[10, 400]
+    maxDetectDistance: 150,
+    // If no one stands in front of the mirror for screenOffTime seconds the screen 
+    // is turned off
+    screenOffTime: 60
+
+    }
+}
+```
+
 # Face Recognition with Open CV and Deep Neural Network
 
 This module detects and recognizes your face for [MagicMirror²](https://magicmirror.builders/). This module is mainly inspired by [MMM-Facial-Recognition-OCV3](https://github.com/normyx/MMM-Facial-Recognition-OCV3) and a tutorial from [Adrian Rosebrock](https://www.pyimagesearch.com/2018/06/25/raspberry-pi-face-recognition/). It uses the new DNN (Deep Neural Network) provided by OpenCV 4.1 and is much more accurate than the old Haar Cascade method. The old method is still available in this module because for a Raspberry Pi Zero the new way will be too heavy.

@@ -74,6 +74,8 @@ Module.register('MMM-Face-Reco-DNN', {
   timouts: {},
   users: [],
   userClasses: [],
+  // while python process is running this variable will be set to true
+  pythonAlive: false,
 
   // ----------------------------------------------------------------------------------------------------
   start: function() {
@@ -89,10 +91,10 @@ Module.register('MMM-Face-Reco-DNN', {
     this.config.classes_known  =[this.config.knownClass,                            this.config.everyoneClass,this.config.alwaysClass];
 
 
-    // we want to frequently restart the facerecognition.py
+    // we want to frequently check if facerecognition.py is still running
     setInterval(() => {
-			this.sendSocketNotification('RESTART', null);
-		}, 24*60*60*1000);
+			this.checkPython();
+		}, 5*60*1000);
   },
 
   // ----------------------------------------------------------------------------------------------------
@@ -453,6 +455,8 @@ Module.register('MMM-Face-Reco-DNN', {
          this.config.debug && Log.log('Detected ' + logoutCount + ' logouts.');
          this.sendNotification('USERS_LOGOUT', payload.users);
       }
+    } else if (payload.action === 'ping') {
+      this.pythonAlive = true;
     }
   },
 
@@ -475,4 +479,15 @@ Module.register('MMM-Face-Reco-DNN', {
       this.sendNotification('LOGGED_IN_USERS', this.users);
     }
   },
+
+  checkPython: function() {
+    // check if 'pythonAlive' has been set to true
+    if (!this.pythonAlive){
+      // if not then python is not running -> restart
+      this.sendSocketNotification('RESTART', null);
+    }
+    // we always want to check whether the variable has been set to true by 
+    // the running python process by the time this method is called again
+    this.pythonAlive = false;
+  }
 });

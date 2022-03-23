@@ -85,6 +85,13 @@ module.exports = NodeHelper.create({
           users: message.logout.names,
         });
       }
+
+      // ping to tell module python script is still alive
+      if (message.hasOwnProperty('ping')) {
+        self.sendSocketNotification('user', {
+          action: 'ping',
+        });
+      }
     });
 
     // Shutdown node helper
@@ -119,13 +126,14 @@ module.exports = NodeHelper.create({
       }
     }
     if (notification === 'RESTART'){
+      console.log('[' + this.name + '] ' + 'Restarting python');
       // stop python shell
       this.stop()
-      // restart after 20s
+      // restart after 10s
       setTimeout(() => {
         pythonStarted = true;
         this.python_start();
-      }, 20*1000);
+      }, 10*1000);
     }
   },
 

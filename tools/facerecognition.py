@@ -113,9 +113,16 @@ fps = FPS().start()
 display_on = True
 # when was the last time the distance sensor detected someone
 last_dist_detect = time.time()
+# when did we last ping the core module to show process is still alive
+last_ping = 0
 
 # loop over frames from the video file stream
 while True:
+	# every 60s we ping main module
+	if time.time() - last_ping > 60:
+		printjson("ping", "")
+		last_ping = time.time()
+		
 	# check if someone stands infront of the monitor
 	if time.time() - last_dist_detect > 10:
 		if us_distance.get_distance() > args["detectDist"]:

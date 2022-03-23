@@ -32,8 +32,8 @@ module.exports = NodeHelper.create({
         '--extendDataset=' + extendedDataset,
         '--dataset=' + this.config.dataset,
         '--tolerance=' + this.config.tolerance,
-        '--detectDist' + this.config.maxDetectDistance,
-        '--screenOff' + this.config.screenOffTime,
+        '--detectDist=' + this.config.maxDetectDistance,
+        '--screenOff=' + this.config.screenOffTime,
       ],
     };
 

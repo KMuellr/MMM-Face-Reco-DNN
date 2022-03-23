@@ -137,9 +137,17 @@ while True:
 			# someone in front of mirror? --> store time and turn on screen if necessary
 			last_dist_detect = time.time()
 			if not display_on:
-				process = subprocess.Popen("xset dpms force on".split(), 
+				# make sure it was not a false positive
+				time.sleep(0.1)
+				fp_test1 = us_distance.get_distance() > 100
+				time.sleep(0.1)
+				fp_test2 = us_distance.get_distance() > 100
+				if fp_test1 or fp_test2:
+					continue
+				else:
+					process = subprocess.Popen("xset dpms force on".split(), 
 												stdout=subprocess.PIPE)
-				display_on = True
+					display_on = True
 
 	# grab the frame from the threaded video stream and resize it
 	# to 500px (to speedup processing)

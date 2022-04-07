@@ -1,5 +1,5 @@
-"""Provides the 'get_distance' function which uses the ultrasonic sensor to deter
-mine the distance from the mirror to the nearest object."""
+"""Provides the 'get_distance' function which uses the ultrasonic sensor to 
+determine the distance from the mirror to the nearest object."""
 import time
 import RPi.GPIO as GPIO
 

@@ -139,9 +139,9 @@ while True:
 			if not display_on:
 				# make sure it was not a false positive
 				time.sleep(0.1)
-				fp_test1 = us_distance.get_distance() > 100
+				fp_test1 = us_distance.get_distance() > args["detectDist"]
 				time.sleep(0.1)
-				fp_test2 = us_distance.get_distance() > 100
+				fp_test2 = us_distance.get_distance() > args["detectDist"]
 				if fp_test1 or fp_test2:
 					continue
 				else:
